@@ -32,9 +32,9 @@ use warnings;
 use utf8;
 
 # Decode INPUT / encode OUTPUT with a CRLF line ending as per iCalendar SPECS
-use open qw/:std :encoding(utf8)/, IO => ":crlf";
+use open qw/:std :encoding(utf8)/, IO => ":mmap :crlf";
 
-binmode STDIN, ":crlf";
+binmode STDIN, ":mmap :crlf";
 binmode STDOUT, ":crlf";
 
 # Slurp the entire input in one go
@@ -76,7 +76,7 @@ while (<>) {
                           # the leading SPACE or HTAB
                 substr( $cumulative_continuation_lines, length $cumulative_continuation_lines ) = $^N;
             })
-        )*+               # Group match repeating for N possible continuation lines avoiding backtracking
+        )++               # Group match repeating for 1+ possible continuation lines avoiding backtracking
                           # through a possessive quantifier, therefore concatenating the contents of each
                           # continuation line to the holding variable
 

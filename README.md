@@ -25,14 +25,14 @@ if you wish to read the source ics file from the standard input
 ### Alternative one-liner
 A very concise one-liner which should perform exactly as programme in the file follows. Useful for a quick copy-and-paste in a shell pipeline. In order to maximise its compactness it will likely appear quite cryptic.
 ```
-PERLIO=:crlf perl -0777 -C -pe 'my$g;s/^(?{local$v;})([^\t ][^\n]*+)(?:\n[\t ]([^\n]*)(?{substr($v,length$v)=$^N}))*+(?{$g=$v})/$1$g/mg'
+PERLIO=:crlf perl -0777 -C -pe 'my$g;s/^(?{local$v;})([^\t ][^\n]*+)(?:\n[\t ]([^\n]*)(?{substr($v,length$v)=$^N}))++(?{$g=$v})/$1$g/mg'
 #
 # or for Perl 5.12+ ( \N equivalent to [^\n] )
 #
-PERLIO=:crlf perl -0777 -C -pe 'my$g;s/^(?{local$v;})([^\t ]\N*+)(?:\n[\t ](\N*)(?{substr($v,length$v)=$^N}))*+(?{$g=$v})/$1$g/mg'
+PERLIO=:crlf perl -0777 -C -pe 'my$g;s/^(?{local$v;})([^\t ]\N*+)(?:\n[\t ](\N*)(?{substr($v,length$v)=$^N}))++(?{$g=$v})/$1$g/mg'
 
 # e.g.
 $ cat SOURCE.ics |
-PERLIO=:crlf perl -0777 -C -pe 'my$g;s/^(?{local$v;})([^\t ][^\n]*+)(?:\n[\t ]([^\n]*)(?{substr($v,length$v)=$^N}))*+(?{$g=$v})/$1$g/mg' |
+PERLIO=:crlf perl -0777 -C -pe 'my$g;s/^(?{local$v;})([^\t ][^\n]*+)(?:\n[\t ]([^\n]*)(?{substr($v,length$v)=$^N}))++(?{$g=$v})/$1$g/mg' |
 sed '/ORGANIZER/ s/mailto:address1@dom.tld/mailto:subst_address@dom.tld/' > CONVERTED.ics
 ```
