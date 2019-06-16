@@ -1,10 +1,10 @@
 #!/usr/bin/env perl 
 #===============================================================================
 #
-#         FILE: ics_line_unfolder.pl
+#         FILE: ics_line_unfolder_regex.pl
 #
-#        USAGE: ./ics_line_unfolder.pl FOLDED.ICS > UNFOLDED.ICS
-#               ./ics_line_unfolder.pl < FOLDED.ICS > UNFOLDED.ICS
+#        USAGE: ./ics_line_unfolder_regex.pl FOLDED.ICS > UNFOLDED.ICS
+#               ./ics_line_unfolder_regex.pl < FOLDED.ICS > UNFOLDED.ICS
 #
 #  DESCRIPTION: Code which prints iCalendar files with their content lines
 #               unfolded. Lines starting with either a SPACE or HTAB character
