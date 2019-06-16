@@ -11,18 +11,39 @@ That makes them quite inconvenient to process using line-oriented tools/code, fo
 The purpose of this code is to process iCalendar files creating files with identical content lines, this time unfolded.
 As a corollary lines _could_ be longer than 75 octets + linebreak. In deference to the section of the RFC quoted above, the output lines are terminated by a CRLF 2-character sequence (CarriageReturn LineBreak, or \r\n for anyone familiar with this notation).
 ## Details and usage
-The code is written in Perl 5, using a substitution with code embedded in the regex to perform the actual line unfolding.
-See the comments in the programme for further details.
-### Usage
+### Line-processing version
+The code is written in Perl 5, reading line by line with a sliding window allowing to concatenate the continuation lines to the starting line.
+#### Usage
 ```
 perl ics_line_unfolder.pl SOURCE.ics > OUTPUT.ics
 
 or
 
-< SOURCE.ics perl ics_line_unfolder.pl > OUTPUT.ics
+< SOURCE.ics perl ics_line_unfolder > OUTPUT.ics
 if you wish to read the source ics file from the standard input
 ```
-### Alternative one-liner
+#### Alternative one-liner
+A very concise one-liner which should perform exactly as programme in the file follows. Useful for a quick copy-and-paste in a shell pipeline. In order to maximise its compactness it will likely appear quite cryptic.
+```
+# for Perl 5.10+
+PERLIO=:crlf perl -C -wnE 'state$a;$a//($a=$_,next);s///,substr($a,(length$a)-1)=$_,(eof(ARGV)and print$a),next if /^[\t ]/;print $a;$a=$_;$a=undef,print if eof(ARGV);'
+```
+See the examples for the regex-based one-liners below for a practical, if trivial, usage scenario.
+### Regex-based version
+The code is written in Perl 5, using a substitution with code embedded in the regex to perform the actual line unfolding.
+See the comments in the programme for further details.
+Since it reads the entire contents of the file it could be quite memory-hungry.
+Given how it performs no syntax validation, just simple unfolding, it offers no practical advantage to the other version and has a potentially significative memory footprint downside, so it's more of an exercise in regex use.
+#### Usage
+```
+perl ics_line_unfolder_regex.pl SOURCE.ics > OUTPUT.ics
+
+or
+
+< SOURCE.ics perl ics_line_unfolder_regex.pl > OUTPUT.ics
+if you wish to read the source ics file from the standard input
+```
+#### Alternative one-liner
 A very concise one-liner which should perform exactly as programme in the file follows. Useful for a quick copy-and-paste in a shell pipeline. In order to maximise its compactness it will likely appear quite cryptic.
 ```
 PERLIO=:crlf perl -0777 -C -pe 'my$g;s/^(?{local$v;})([^\t ][^\n]*+)(?:\n[\t ]([^\n]*)(?{substr($v,length$v)=$^N}))++(?{$g=$v})/$1$g/mg'
